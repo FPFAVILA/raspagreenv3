@@ -19,6 +19,7 @@ export interface KYCStatus {
   cpf?: string;
   fullName?: string;
   birthDate?: string;
+  depositAttempts?: number;
 }
 
 export interface ScratchCard {
