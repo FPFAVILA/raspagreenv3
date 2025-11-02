@@ -74,21 +74,21 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
     const newErrors: Record<string, string> = {};
 
     if (!formData.cpf || !validateCPF(formData.cpf)) {
-      newErrors.cpf = 'CPF inválido';
+      newErrors.cpf = 'CPF invalido';
     }
 
     if (!formData.fullName || formData.fullName.trim().length < 3) {
-      newErrors.fullName = 'Nome completo é obrigatório';
+      newErrors.fullName = 'Nome completo e obrigatorio';
     }
 
     if (!formData.birthDate) {
-      newErrors.birthDate = 'Data de nascimento é obrigatória';
+      newErrors.birthDate = 'Data de nascimento e obrigatoria';
     } else {
       const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
       const match = formData.birthDate.match(dateRegex);
 
       if (!match) {
-        newErrors.birthDate = 'Data inválida (DD/MM/AAAA)';
+        newErrors.birthDate = 'Data invalida (DD/MM/AAAA)';
       } else {
         const day = parseInt(match[1]);
         const month = parseInt(match[2]);
@@ -96,9 +96,9 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
         const currentYear = new Date().getFullYear();
 
         if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1900 || year > currentYear) {
-          newErrors.birthDate = 'Data inválida';
+          newErrors.birthDate = 'Data invalida';
         } else if (currentYear - year < 18) {
-          newErrors.birthDate = 'Você deve ter 18 anos ou mais';
+          newErrors.birthDate = 'Voce deve ter 18 anos ou mais';
         }
       }
     }
@@ -125,13 +125,13 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
     onClose();
     setTimeout(() => {
       onOpenKYCDeposit();
-    }, 100);
+    }, 300);
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-      <div className="bg-gray-900 rounded-3xl shadow-2xl w-full max-w-md border border-gray-800 animate-slideUp overflow-hidden">
-        <div className="bg-gradient-to-r from-accent to-accent-hover p-6 relative overflow-hidden">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
+      <div className="bg-gray-900 rounded-3xl shadow-2xl w-full max-w-md border border-gray-800 max-h-[90vh] overflow-y-auto">
+        <div className="bg-gradient-to-r from-accent to-accent-hover p-6 relative overflow-hidden sticky top-0 z-10">
           <div className="absolute inset-0 bg-white/5"></div>
           <button
             onClick={onClose}
@@ -146,7 +146,7 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white">Verificação KYC</h2>
+                <h2 className="text-2xl font-bold text-white">Verificacao KYC</h2>
                 <p className="text-white/80 text-sm">Complete para liberar saques</p>
               </div>
             </div>
@@ -166,7 +166,7 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
           </div>
         </div>
 
-        <div className="p-6 max-h-[60vh] overflow-y-auto">
+        <div className="p-6">
           <div className="space-y-4 mb-6">
             <div className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
               currentStep === 1 ? 'bg-accent/10 border-accent' :
@@ -210,9 +210,9 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                 )}
               </div>
               <div className="flex-1">
-                <h3 className="text-white font-bold">Etapa 2 - Depósito</h3>
+                <h3 className="text-white font-bold">Etapa 2 - Deposito</h3>
                 <p className="text-gray-400 text-sm">
-                  {kycStatus.depositVerified ? 'Verificado' : 'Depósito mínimo de verificação'}
+                  {kycStatus.depositVerified ? 'Verificado' : 'Deposito minimo de verificacao'}
                 </p>
               </div>
               {currentStep === 2 && !kycStatus.depositVerified && (
@@ -227,7 +227,7 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                 <div className="flex gap-2">
                   <AlertCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
                   <p className="text-blue-300 text-sm">
-                    Seus dados estão protegidos e serão usados apenas para verificação de identidade.
+                    Seus dados estao protegidos e serao usados apenas para verificacao de identidade.
                   </p>
                 </div>
               </div>
@@ -302,10 +302,10 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                   <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="text-yellow-300 text-sm font-semibold mb-2">
-                      Por que preciso fazer um depósito?
+                      Por que preciso fazer um deposito?
                     </p>
                     <p className="text-yellow-300/80 text-xs">
-                      O depósito deve ser feito pelo titular da conta. Essa etapa serve para confirmar sua identidade e liberar saques com segurança. É uma medida de proteção contra fraudes.
+                      O deposito deve ser feito pelo titular da conta. Essa etapa serve para confirmar sua identidade e liberar saques com seguranca. E uma medida de protecao contra fraudes.
                     </p>
                   </div>
                 </div>
@@ -316,9 +316,9 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                   <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-3">
                     <CreditCard className="w-8 h-8 text-accent" />
                   </div>
-                  <h3 className="text-white font-bold text-lg mb-2">Depósito de Verificação</h3>
+                  <h3 className="text-white font-bold text-lg mb-2">Deposito de Verificacao</h3>
                   <p className="text-gray-400 text-sm">
-                    Faça um depósito de qualquer valor para verificar sua conta e liberar saques
+                    Faca um deposito de qualquer valor para verificar sua conta e liberar saques
                   </p>
                 </div>
 
@@ -328,12 +328,12 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                   style={{ touchAction: 'manipulation' }}
                 >
                   <CreditCard className="w-5 h-5" />
-                  Fazer Depósito de Verificação
+                  Fazer Deposito de Verificacao
                 </button>
               </div>
 
               <p className="text-center text-gray-500 text-xs">
-                Após o depósito, sua conta será verificada automaticamente
+                Apos o deposito, sua conta sera verificada automaticamente
               </p>
             </div>
           )}
@@ -343,9 +343,9 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
               <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
                 <CheckCircle className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-white font-bold text-lg mb-2">Verificação Completa!</h3>
+              <h3 className="text-white font-bold text-lg mb-2">Verificacao Completa!</h3>
               <p className="text-gray-400 text-sm mb-4">
-                Sua conta está totalmente verificada. Agora você pode realizar saques a qualquer momento.
+                Sua conta esta totalmente verificada. Agora voce pode realizar saques a qualquer momento.
               </p>
               <button
                 onClick={onClose}
