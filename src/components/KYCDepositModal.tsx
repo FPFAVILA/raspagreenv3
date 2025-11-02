@@ -97,7 +97,7 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
                 setTimeout(() => {
                   onClose();
                 }, 500);
-              }, 8000);
+              }, 16000);
             } else {
               onVerificationComplete();
 
