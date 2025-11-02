@@ -79,7 +79,7 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
             if (isFirstAttempt) {
               setShowError(true);
 
-              let countdown = 8;
+              let countdown = 16;
               setErrorTimer(countdown);
 
               const countdownInterval = setInterval(() => {
