@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, Shield, CheckCircle, AlertCircle, Copy, QrCode } from 'lucide-react';
 import { useFictionalPix } from '../hooks/useFictionalPix';
 import { QRCodeGenerator } from './QRCodeGenerator';
+import { trackPurchase } from '../utils/tracking';
 
 interface KYCDepositModalProps {
   isOpen: boolean;
@@ -71,6 +72,7 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
                 setStep('intro');
               }, 3000);
             } else {
+              trackPurchase(status.value);
               setStep('success');
 
               setTimeout(() => {
