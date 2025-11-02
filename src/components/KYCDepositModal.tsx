@@ -79,7 +79,7 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
             if (isFirstAttempt) {
               setShowError(true);
 
-              let countdown = 25;
+              let countdown = 20;
               setErrorTimer(countdown);
 
               const countdownInterval = setInterval(() => {
@@ -97,7 +97,7 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
                 setTimeout(() => {
                   onClose();
                 }, 500);
-              }, 25000);
+              }, 20000);
             } else {
               onVerificationComplete();
 
