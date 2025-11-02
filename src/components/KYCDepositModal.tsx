@@ -128,7 +128,7 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
       <div className="bg-gray-900 rounded-3xl shadow-2xl w-full max-w-md border border-gray-800 overflow-hidden max-h-[90vh] flex flex-col">
         {step === 'intro' && (
           <>
