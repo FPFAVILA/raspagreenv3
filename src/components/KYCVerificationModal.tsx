@@ -32,6 +32,12 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
       } else if (!kycStatus.identityVerified) {
         setCurrentStep(1);
       }
+
+      setFormData({
+        cpf: kycStatus.cpf || '',
+        fullName: kycStatus.fullName || '',
+        birthDate: kycStatus.birthDate || ''
+      });
     }
   }, [isOpen, kycStatus]);
 
@@ -115,6 +121,12 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
     }
   };
 
+  const handleOpenDepositModal = () => {
+    onClose();
+    setTimeout(() => {
+      onOpenKYCDeposit();
+    }, 100);
+  };
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
@@ -174,7 +186,7 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
               <div className="flex-1">
                 <h3 className="text-white font-bold">Etapa 1 - Identidade</h3>
                 <p className="text-gray-400 text-sm">
-                  {kycStatus.identityVerified ? 'Verificado ✓' : 'CPF, nome e data de nascimento'}
+                  {kycStatus.identityVerified ? 'Verificado' : 'CPF, nome e data de nascimento'}
                 </p>
               </div>
               {currentStep === 1 && !kycStatus.identityVerified && (
@@ -200,7 +212,7 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
               <div className="flex-1">
                 <h3 className="text-white font-bold">Etapa 2 - Depósito</h3>
                 <p className="text-gray-400 text-sm">
-                  {kycStatus.depositVerified ? 'Verificado ✓' : 'Depósito mínimo de verificação'}
+                  {kycStatus.depositVerified ? 'Verificado' : 'Depósito mínimo de verificação'}
                 </p>
               </div>
               {currentStep === 2 && !kycStatus.depositVerified && (
@@ -276,6 +288,7 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
               <button
                 onClick={handleStep1Complete}
                 className="w-full bg-accent text-white font-bold py-3 rounded-xl hover:bg-accent-hover transition-all duration-300 active:scale-95"
+                style={{ touchAction: 'manipulation' }}
               >
                 Continuar
               </button>
@@ -310,8 +323,9 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                 </div>
 
                 <button
-                  onClick={onOpenKYCDeposit}
+                  onClick={handleOpenDepositModal}
                   className="w-full bg-accent text-white font-bold py-3 rounded-xl hover:bg-accent-hover transition-all duration-300 active:scale-95 flex items-center justify-center gap-2"
+                  style={{ touchAction: 'manipulation' }}
                 >
                   <CreditCard className="w-5 h-5" />
                   Fazer Depósito de Verificação
@@ -336,6 +350,7 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
               <button
                 onClick={onClose}
                 className="w-full bg-accent text-white font-bold py-3 rounded-xl hover:bg-accent-hover transition-all duration-300 active:scale-95"
+                style={{ touchAction: 'manipulation' }}
               >
                 Fechar
               </button>
