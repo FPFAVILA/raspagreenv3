@@ -262,25 +262,27 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({ user }) => {
         </div>
       )}
 
-      {/* Header com informações do usuário */}
-      <div className="bg-gray-900 backdrop-blur-xl p-4 border-b border-gray-800">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-accent rounded-2xl flex items-center justify-center shadow-modern">
-              <Crown className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-white font-bold text-lg">
-                Olá, {user.name.split(' ')[0]}! 👋
+      {/* Header com logo e informações do usuário */}
+      <div className="bg-gray-900 backdrop-blur-xl p-3 border-b border-gray-800">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            <img
+              src="/logo_1752328959.png"
+              alt="Raspou Ganhou"
+              className="h-10 flex-shrink-0"
+            />
+            <div className="flex-1 min-w-0">
+              <h1 className="text-white font-bold text-sm truncate">
+                Ola, {user.name.split(' ')[0]}!
               </h1>
-              <p className="text-gray-300 text-sm">
-                Bem-vindo de volta ao jogo
+              <p className="text-gray-400 text-xs truncate">
+                Bem-vindo de volta
               </p>
             </div>
           </div>
-          <div className="text-right">
-            <div className="bg-accent/20 rounded-xl px-3 py-1 border border-accent/50">
-              <span className="text-accent text-xs font-bold">🔥 ATIVO</span>
+          <div className="flex-shrink-0">
+            <div className="bg-accent/20 rounded-lg px-2 py-1 border border-accent/50">
+              <span className="text-accent text-xs font-bold">ATIVO</span>
             </div>
           </div>
         </div>
@@ -289,39 +291,38 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({ user }) => {
       {/* Conteúdo principal */}
       <div className="flex-1 pb-32">
         {/* Saldo Display */}
-        <div className="mx-4 mt-6 mb-6">
-          <div className="bg-gray-900 backdrop-blur-2xl rounded-3xl shadow-modern p-6 relative overflow-hidden border border-gray-800">
-            {/* Background Effects Premium */}
+        <div className="mx-4 mt-4 mb-4">
+          <div className="bg-gray-900 backdrop-blur-2xl rounded-2xl shadow-modern p-4 relative overflow-hidden border border-gray-800">
             <div className="absolute inset-0 bg-accent/5"></div>
             <div className="absolute top-0 left-0 w-full h-1 bg-accent"></div>
-            
+
             <div className="relative z-10">
-              <div className="text-center mb-4">
-                <p className="text-gray-300 text-sm font-semibold mb-2">
-                  Saldo Disponível
+              <div className="text-center mb-3">
+                <p className="text-gray-400 text-xs font-semibold mb-1">
+                  Saldo Disponivel
                 </p>
-                <div className="text-4xl font-bold text-white">
+                <div className="text-3xl font-bold text-white">
                   R$ {gameState.balance.toFixed(2).replace('.', ',')}
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => setShowAddBalanceModal(true)}
-                  className="w-full bg-gray-800 text-white px-4 py-3 rounded-2xl flex items-center justify-center gap-3 hover:bg-gray-700 transition-all duration-300 active:scale-95 border border-gray-700"
+                  className="bg-gray-800 text-white px-3 py-2.5 rounded-xl flex items-center justify-center gap-2 hover:bg-gray-700 transition-all duration-300 active:scale-95 border border-gray-700"
                   style={{ touchAction: 'manipulation' }}
                 >
-                  <Plus className="w-5 h-5" />
-                  <span className="font-bold">Adicionar Saldo</span>
+                  <Plus className="w-4 h-4" />
+                  <span className="font-bold text-sm">Adicionar</span>
                 </button>
 
                 <button
                   onClick={() => setShowWithdrawModal(true)}
-                  className="w-full bg-gray-800 text-white px-4 py-3 rounded-2xl flex items-center justify-center gap-3 hover:bg-gray-700 transition-all duration-300 active:scale-95 border border-gray-700 font-bold"
+                  className="bg-gray-800 text-white px-3 py-2.5 rounded-xl flex items-center justify-center gap-2 hover:bg-gray-700 transition-all duration-300 active:scale-95 border border-gray-700 font-bold"
                   style={{ touchAction: 'manipulation' }}
                 >
-                  <Banknote className="w-5 h-5" />
-                  <span>Sacar Saldo</span>
+                  <Banknote className="w-4 h-4" />
+                  <span className="text-sm">Sacar</span>
                 </button>
               </div>
             </div>
@@ -329,22 +330,21 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({ user }) => {
         </div>
 
         {/* Banner Promocional */}
-        <div className="mx-4 mt-6 mb-6">
-          <div className="relative overflow-hidden rounded-2xl shadow-xl">
+        <div className="mx-4 mt-4 mb-4">
+          <div className="relative overflow-hidden rounded-xl shadow-xl">
             <img
               src="/1752250181.webp"
               alt="Banner Promocional"
               className="w-full h-auto object-cover"
             />
 
-            {/* Barra inferior verde */}
-            <div className="absolute bottom-0 left-0 right-0 bg-accent py-2 px-4">
+            <div className="absolute bottom-0 left-0 right-0 bg-accent py-1.5 px-3">
               <div className="flex items-center justify-center gap-2">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="text-white font-bold text-sm uppercase tracking-wide">AO VIVO</span>
+                <div className="flex items-center gap-1">
+                  <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
+                  <span className="text-white font-bold text-xs uppercase tracking-wide">AO VIVO</span>
                 </div>
-                <span className="text-white/90 text-sm font-semibold">Jogadores ganhando agora!</span>
+                <span className="text-white/90 text-xs font-semibold">Jogadores ganhando agora!</span>
               </div>
             </div>
           </div>
