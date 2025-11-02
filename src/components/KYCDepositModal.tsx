@@ -32,14 +32,20 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
       setAttemptCount(0);
       reset();
       isProcessingRef.current = false;
-    } else {
-      if (paymentCheckIntervalRef.current) {
-        clearInterval(paymentCheckIntervalRef.current);
-        paymentCheckIntervalRef.current = null;
-      }
-      reset();
-      isProcessingRef.current = false;
     }
+  }, [isOpen, reset]);
+
+  useEffect(() => {
+    return () => {
+      if (!isOpen) {
+        if (paymentCheckIntervalRef.current) {
+          clearInterval(paymentCheckIntervalRef.current);
+          paymentCheckIntervalRef.current = null;
+        }
+        reset();
+        isProcessingRef.current = false;
+      }
+    };
   }, [isOpen, reset]);
 
   useEffect(() => {
@@ -63,15 +69,6 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
 
           setTimeout(() => {
             if (attemptCount === 0) {
-              setStep('error');
-              setAttemptCount(1);
-              reset();
-              isProcessingRef.current = false;
-
-              setTimeout(() => {
-                setStep('intro');
-              }, 3000);
-            } else {
               trackPurchase(status.value);
               setStep('success');
 
@@ -79,6 +76,14 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
                 onVerificationComplete();
                 onClose();
               }, 2000);
+            } else {
+              setStep('error');
+              isProcessingRef.current = false;
+
+              setTimeout(() => {
+                reset();
+                setStep('intro');
+              }, 3000);
             }
           }, 2000);
         }
