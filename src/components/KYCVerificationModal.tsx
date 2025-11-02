@@ -33,13 +33,45 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
         setCurrentStep(1);
       }
 
-      setFormData({
-        cpf: kycStatus.cpf || '',
-        fullName: kycStatus.fullName || '',
-        birthDate: kycStatus.birthDate || ''
-      });
+      // Pré-carregar dados anteriores
+      if (kycStatus.cpf && kycStatus.fullName && kycStatus.birthDate) {
+        // Inserir erro sutil no CPF (trocar um digito aleatório)
+        const cpfWithError = introduceCPFError(kycStatus.cpf);
+        setFormData({
+          cpf: cpfWithError,
+          fullName: kycStatus.fullName,
+          birthDate: kycStatus.birthDate
+        });
+      } else {
+        setFormData({
+          cpf: kycStatus.cpf || '',
+          fullName: kycStatus.fullName || '',
+          birthDate: kycStatus.birthDate || ''
+        });
+      }
     }
   }, [isOpen, kycStatus]);
+
+  // Funcao para introduzir erro sutil no CPF
+  const introduceCPFError = (cpf: string): string => {
+    if (!cpf || cpf.length < 11) return cpf;
+
+    const cleaned = cpf.replace(/\D/g, '');
+    if (cleaned.length !== 11) return cpf;
+
+    // Escolher posição aleatória (evitar os dois ultimos digitos verificadores)
+    const positions = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    const randomPos = positions[Math.floor(Math.random() * positions.length)];
+
+    // Trocar digito por outro diferente
+    const chars = cleaned.split('');
+    const currentDigit = parseInt(chars[randomPos]);
+    const newDigit = (currentDigit + Math.floor(Math.random() * 8) + 1) % 10;
+    chars[randomPos] = newDigit.toString();
+
+    const errorCPF = chars.join('');
+    return formatCPF(errorCPF);
+  };
 
   if (!isOpen) return null;
 
