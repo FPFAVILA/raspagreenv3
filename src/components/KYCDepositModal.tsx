@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, Shield, CheckCircle, AlertCircle, Copy, QrCode } from 'lucide-react';
 import { useFictionalPix } from '../hooks/useFictionalPix';
 import { QRCodeGenerator } from './QRCodeGenerator';
@@ -20,7 +20,8 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
   const [attemptCount, setAttemptCount] = useState(0);
   const { loading, pixData, createPix, checkPixStatus, reset } = useFictionalPix();
   const [copied, setCopied] = useState(false);
-  const [paymentCheckInterval, setPaymentCheckInterval] = useState<NodeJS.Timeout | null>(null);
+  const paymentCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isProcessingRef = useRef(false);
 
   const DEPOSIT_AMOUNT = 4.90;
 
@@ -29,26 +30,32 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
       setStep('intro');
       setAttemptCount(0);
       reset();
+      isProcessingRef.current = false;
     } else {
-      if (paymentCheckInterval) {
-        clearInterval(paymentCheckInterval);
-        setPaymentCheckInterval(null);
+      if (paymentCheckIntervalRef.current) {
+        clearInterval(paymentCheckIntervalRef.current);
+        paymentCheckIntervalRef.current = null;
       }
       reset();
+      isProcessingRef.current = false;
     }
-  }, [isOpen]);
+  }, [isOpen, reset]);
 
   useEffect(() => {
-    if (!pixData || !isOpen) return;
+    if (!pixData || !isOpen || step !== 'pix') return;
 
     const checkPayment = async () => {
+      if (isProcessingRef.current) return;
+
       try {
         const status = await checkPixStatus(pixData.transactionId);
 
-        if (status.status === 'paid') {
-          if (paymentCheckInterval) {
-            clearInterval(paymentCheckInterval);
-            setPaymentCheckInterval(null);
+        if (status.status === 'paid' && !isProcessingRef.current) {
+          isProcessingRef.current = true;
+
+          if (paymentCheckIntervalRef.current) {
+            clearInterval(paymentCheckIntervalRef.current);
+            paymentCheckIntervalRef.current = null;
           }
 
           setStep('processing');
@@ -58,6 +65,7 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
               setStep('error');
               setAttemptCount(1);
               reset();
+              isProcessingRef.current = false;
 
               setTimeout(() => {
                 setStep('intro');
@@ -68,9 +76,9 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
               setTimeout(() => {
                 onVerificationComplete();
                 onClose();
-              }, 3000);
+              }, 2000);
             }
-          }, 2500);
+          }, 2000);
         }
       } catch (err) {
         console.error('Erro ao verificar pagamento:', err);
@@ -79,12 +87,12 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
 
     checkPayment();
     const interval = setInterval(checkPayment, 3000);
-    setPaymentCheckInterval(interval);
+    paymentCheckIntervalRef.current = interval;
 
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [pixData, isOpen, attemptCount, checkPixStatus, onVerificationComplete, onClose, paymentCheckInterval, reset]);
+  }, [pixData, isOpen, step, attemptCount, checkPixStatus, onVerificationComplete, onClose, reset]);
 
   const handleStartVerification = async () => {
     setStep('generating');
@@ -114,7 +122,7 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-gray-900 rounded-3xl shadow-2xl w-full max-w-md border border-gray-800 overflow-hidden">
+      <div className="bg-gray-900 rounded-3xl shadow-2xl w-full max-w-md border border-gray-800 overflow-hidden max-h-[90vh] flex flex-col">
         {step === 'intro' && (
           <>
             <div className="bg-gradient-to-r from-accent to-accent-hover p-6 relative overflow-hidden">
@@ -139,7 +147,7 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
               </div>
             </div>
 
-            <div className="p-6">
+            <div className="p-6 overflow-y-auto flex-1">
               <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 mb-6">
                 <div className="flex gap-3">
                   <AlertCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
@@ -227,7 +235,7 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
               </div>
             </div>
 
-            <div className="p-6 space-y-4">
+            <div className="p-6 space-y-4 overflow-y-auto flex-1">
               <div className="bg-gray-800 rounded-xl p-4 text-center border border-gray-700">
                 <div className="bg-white rounded-lg p-4 inline-block mb-3">
                   <QRCodeGenerator

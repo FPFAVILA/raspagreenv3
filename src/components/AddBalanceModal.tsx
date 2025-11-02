@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, Copy, QrCode, CreditCard, Smartphone, CheckCircle } from 'lucide-react';
 import { useFictionalPix } from '../hooks/useFictionalPix';
 import { QRCodeGenerator } from './QRCodeGenerator';
@@ -23,7 +23,8 @@ export const AddBalanceModal: React.FC<AddBalanceModalProps> = ({
   const { loading, error, pixData, createPix, checkPixStatus, reset } = useFictionalPix();
   const [copied, setCopied] = useState(false);
   const [isCheckingPayment, setIsCheckingPayment] = useState(false);
-  const [paymentCheckInterval, setPaymentCheckInterval] = useState<NodeJS.Timeout | null>(null);
+  const paymentCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isProcessingRef = useRef(false);
 
   useEffect(() => {
     if (isOpen && suggestedAmount) {
@@ -37,13 +38,17 @@ export const AddBalanceModal: React.FC<AddBalanceModalProps> = ({
     setIsCheckingPayment(true);
 
     const checkPayment = async () => {
+      if (isProcessingRef.current) return;
+
       try {
         const status = await checkPixStatus(pixData.transactionId);
 
-        if (status.status === 'paid') {
-          if (paymentCheckInterval) {
-            clearInterval(paymentCheckInterval);
-            setPaymentCheckInterval(null);
+        if (status.status === 'paid' && !isProcessingRef.current) {
+          isProcessingRef.current = true;
+
+          if (paymentCheckIntervalRef.current) {
+            clearInterval(paymentCheckIntervalRef.current);
+            paymentCheckIntervalRef.current = null;
           }
 
           trackPurchase(status.value);
@@ -53,6 +58,7 @@ export const AddBalanceModal: React.FC<AddBalanceModalProps> = ({
             reset();
             setAmount('');
             setIsCheckingPayment(false);
+            isProcessingRef.current = false;
             onClose();
           }, 2000);
         }
@@ -64,27 +70,28 @@ export const AddBalanceModal: React.FC<AddBalanceModalProps> = ({
     checkPayment();
 
     const interval = setInterval(checkPayment, 3000);
-    setPaymentCheckInterval(interval);
+    paymentCheckIntervalRef.current = interval;
 
     return () => {
       if (interval) {
         clearInterval(interval);
       }
     };
-  }, [pixData, isOpen]);
+  }, [pixData, isOpen, checkPixStatus, onAddBalance, reset, onClose]);
 
   useEffect(() => {
     if (!isOpen) {
-      if (paymentCheckInterval) {
-        clearInterval(paymentCheckInterval);
-        setPaymentCheckInterval(null);
+      if (paymentCheckIntervalRef.current) {
+        clearInterval(paymentCheckIntervalRef.current);
+        paymentCheckIntervalRef.current = null;
       }
       setIsCheckingPayment(false);
       reset();
       setAmount('');
       setCopied(false);
+      isProcessingRef.current = false;
     }
-  }, [isOpen, paymentCheckInterval, reset]);
+  }, [isOpen, reset]);
 
   // Se modal não está aberto, não renderizar nada
   if (!isOpen) return null;
@@ -123,7 +130,7 @@ export const AddBalanceModal: React.FC<AddBalanceModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] shadow-2xl flex flex-col overflow-hidden">
         {/* Header */}
         <div className="bg-accent text-white p-4 rounded-t-2xl">
           <div className="flex items-center justify-between">
@@ -146,7 +153,7 @@ export const AddBalanceModal: React.FC<AddBalanceModalProps> = ({
           </div>
         </div>
 
-        <div className="p-4">
+        <div className="p-4 overflow-y-auto flex-1">
           {/* Mensagem personalizada se houver */}
           {message && (
             <div className="bg-red-900 border-2 border-red-700 rounded-xl p-4 mb-4 shadow-lg">
