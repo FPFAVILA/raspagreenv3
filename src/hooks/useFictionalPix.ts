@@ -52,9 +52,9 @@ export const useFictionalPix = (): UseFictionalPixReturn => {
       setLoading(false);
       return data;
     } catch (err) {
+      setLoading(false);
       const errorMessage = err instanceof Error ? err.message : 'Erro ao gerar código PIX';
       setError(errorMessage);
-      setLoading(false);
       throw new Error(errorMessage);
     }
   };

@@ -100,8 +100,10 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
     setStep('generating');
 
     try {
-      await createPix(DEPOSIT_AMOUNT);
-      setStep('pix');
+      const data = await createPix(DEPOSIT_AMOUNT);
+      if (data && data.qrcode) {
+        setStep('pix');
+      }
     } catch (err) {
       console.error('Erro ao gerar PIX:', err);
       setStep('intro');
