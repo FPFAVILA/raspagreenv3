@@ -230,7 +230,7 @@ export const WithdrawModal: React.FC<WithdrawModalProps> = ({
                 <span className="text-yellow-800 font-bold text-sm">Verificacao Necessaria</span>
               </div>
               <p className="text-yellow-700 text-sm mb-3 leading-relaxed">
-                Para sacar, e necessario confirmar sua identidade. Faca um deposito minimo de R$ 4,90 que sera creditado ao seu saldo.
+                A verificacao KYC confirma o titular da conta e libera as funcoes financeiras, como saque e deposito. E uma medida de seguranca obrigatoria.
               </p>
               <div className="bg-green-50 border border-green-200 rounded-lg p-2.5 mb-3">
                 <div className="flex items-start gap-2">
