@@ -285,18 +285,30 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
 
           {currentStep === 2 && kycStatus.identityVerified && !kycStatus.depositVerified && (
             <div className="space-y-3">
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 text-center">
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                 <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-2">
                   <Shield className="w-6 h-6 text-accent" />
                 </div>
-                <h3 className="text-white font-bold text-base mb-2">Deposito de Verificacao</h3>
-                <p className="text-gray-400 text-xs mb-3">
-                  Confirme que voce e o titular da conta
+                <h3 className="text-white font-bold text-base mb-2 text-center">Verificacao de Titularidade</h3>
+                <p className="text-gray-300 text-xs mb-3 text-center leading-relaxed">
+                  Faca um deposito minimo para confirmar que voce e o titular da conta PIX
                 </p>
 
                 <div className="bg-accent/10 rounded-lg p-3 mb-3 border border-accent/30">
-                  <div className="text-accent text-2xl font-bold mb-1">R$ 4,90</div>
-                  <p className="text-gray-400 text-[10px]">Valor de verificacao</p>
+                  <div className="text-accent text-2xl font-bold mb-1 text-center">R$ 4,90</div>
+                  <p className="text-gray-400 text-[10px] text-center">Deposito de verificacao</p>
+                </div>
+
+                <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-2.5 mb-3">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="text-green-300 font-bold text-xs mb-1">O valor sera creditado</h4>
+                      <p className="text-green-200 text-[10px] leading-relaxed">
+                        Os R$ 4,90 serao adicionados ao seu saldo apos a verificacao
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <button
@@ -308,10 +320,15 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                 </button>
               </div>
 
-              <div className="bg-gray-800/50 rounded-lg p-2.5 border border-gray-700">
-                <p className="text-gray-400 text-[10px] text-center leading-relaxed">
-                  Apos confirmacao do deposito, saques serao liberados automaticamente
-                </p>
+              <div className="bg-blue-500/10 rounded-lg p-2.5 border border-blue-500/30">
+                <div className="flex items-start gap-2">
+                  <Shield className="w-3.5 h-3.5 text-blue-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-blue-200 text-[10px] leading-relaxed">
+                      Apos verificacao, voce podera sacar todo o seu saldo disponivel
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           )}

@@ -227,11 +227,19 @@ export const WithdrawModal: React.FC<WithdrawModalProps> = ({
             <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-4 mb-4">
               <div className="flex items-center gap-2 mb-2">
                 <Shield className="w-5 h-5 text-yellow-600" />
-                <span className="text-yellow-800 font-bold text-sm">Verificação Necessária</span>
+                <span className="text-yellow-800 font-bold text-sm">Verificacao Necessaria</span>
               </div>
-              <p className="text-yellow-700 text-sm mb-3">
-                Para realizar saques com saldo acima de R$ 1000,00, você precisa verificar sua conta (KYC). Este processo é rápido e garante a segurança das suas transações.
+              <p className="text-yellow-700 text-sm mb-3 leading-relaxed">
+                Para sacar, e necessario confirmar sua identidade. Faca um deposito minimo de R$ 4,90 que sera creditado ao seu saldo.
               </p>
+              <div className="bg-green-50 border border-green-200 rounded-lg p-2.5 mb-3">
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <p className="text-green-700 text-xs leading-relaxed">
+                    Apos verificacao, voce podera sacar todo o seu saldo disponivel
+                  </p>
+                </div>
+              </div>
               <button
                 onClick={handleOpenKYCModal}
                 className="w-full bg-yellow-500 text-white font-bold py-3 rounded-xl hover:bg-yellow-600 transition-all duration-300 active:scale-95"

