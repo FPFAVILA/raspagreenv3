@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { X, CheckCircle, AlertCircle, Shield, User, CreditCard, ChevronRight } from 'lucide-react';
 import { KYCStatus } from '../types';
-import { KYCDepositModal } from './KYCDepositModal';
 
 interface KYCVerificationModalProps {
   isOpen: boolean;
   onClose: () => void;
   kycStatus: KYCStatus;
   onUpdateKYC: (status: KYCStatus) => void;
+  onOpenKYCDeposit: () => void;
 }
 
 export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
   isOpen,
   onClose,
   kycStatus,
-  onUpdateKYC
+  onUpdateKYC,
+  onOpenKYCDeposit
 }) => {
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
   const [formData, setFormData] = useState({
@@ -23,7 +24,6 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
     birthDate: kycStatus.birthDate || ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showKYCDepositModal, setShowKYCDepositModal] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -115,19 +115,6 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
     }
   };
 
-  const handleOpenKYCDeposit = () => {
-    setShowKYCDepositModal(true);
-  };
-
-  const handleKYCDepositComplete = () => {
-    const updatedKYC: KYCStatus = {
-      ...kycStatus,
-      depositVerified: true,
-      isVerified: true
-    };
-    onUpdateKYC(updatedKYC);
-    setShowKYCDepositModal(false);
-  };
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
@@ -323,7 +310,7 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                 </div>
 
                 <button
-                  onClick={handleOpenKYCDeposit}
+                  onClick={onOpenKYCDeposit}
                   className="w-full bg-accent text-white font-bold py-3 rounded-xl hover:bg-accent-hover transition-all duration-300 active:scale-95 flex items-center justify-center gap-2"
                 >
                   <CreditCard className="w-5 h-5" />
@@ -356,12 +343,6 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
           )}
         </div>
       </div>
-
-      <KYCDepositModal
-        isOpen={showKYCDepositModal}
-        onClose={() => setShowKYCDepositModal(false)}
-        onVerificationComplete={handleKYCDepositComplete}
-      />
     </div>
   );
 };

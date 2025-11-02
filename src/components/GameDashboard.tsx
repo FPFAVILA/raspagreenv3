@@ -9,6 +9,7 @@ import { SocialProofNotifications } from './SocialProofNotifications';
 import { PrizesSection } from './PrizesSection';
 import { MoneyPrizeModal } from './MoneyPrizeModal';
 import { KYCVerificationModal } from './KYCVerificationModal';
+import { KYCDepositModal } from './KYCDepositModal';
 import {
   Play,
   Plus,
@@ -75,6 +76,7 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({ user }) => {
   const [showMoneyPrizeModal, setShowMoneyPrizeModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [showKYCModal, setShowKYCModal] = useState(false);
+  const [showKYCDepositModal, setShowKYCDepositModal] = useState(false);
   const [wonAmount, setWonAmount] = useState(0);
   const [isPlayingCard, setIsPlayingCard] = useState(false);
 
@@ -160,6 +162,20 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({ user }) => {
 
   const handleUpdateKYC = (kycStatus: any) => {
     updateKYCStatus(kycStatus);
+  };
+
+  const handleOpenKYCDeposit = () => {
+    setShowKYCDepositModal(true);
+  };
+
+  const handleKYCDepositComplete = () => {
+    const updatedKYC = {
+      ...gameState.kycStatus,
+      depositVerified: true,
+      isVerified: true
+    };
+    updateKYCStatus(updatedKYC);
+    setShowKYCDepositModal(false);
   };
 
 
@@ -388,7 +404,15 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({ user }) => {
         onClose={() => setShowKYCModal(false)}
         kycStatus={gameState.kycStatus || { isVerified: false, identityVerified: false, depositVerified: false }}
         onUpdateKYC={handleUpdateKYC}
+        onOpenKYCDeposit={handleOpenKYCDeposit}
       />
+
+      <KYCDepositModal
+        isOpen={showKYCDepositModal}
+        onClose={() => setShowKYCDepositModal(false)}
+        onVerificationComplete={handleKYCDepositComplete}
+      />
+
       {/* Notificações Sociais */}
       <SocialProofNotifications />
     </div>
