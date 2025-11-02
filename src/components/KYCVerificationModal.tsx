@@ -114,7 +114,8 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
         identityVerified: true,
         cpf: formData.cpf,
         fullName: formData.fullName,
-        birthDate: formData.birthDate
+        birthDate: formData.birthDate,
+        depositAttempts: kycStatus.depositAttempts || 0
       };
       onUpdateKYC(updatedKYC);
       setCurrentStep(2);
@@ -129,9 +130,9 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
-      <div className="bg-gray-900 rounded-3xl shadow-2xl w-full max-w-md border border-gray-800 max-h-[90vh] overflow-y-auto">
-        <div className="bg-gradient-to-r from-accent to-accent-hover p-6 relative overflow-hidden sticky top-0 z-10">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-[60] overflow-y-auto">
+      <div className="bg-gray-900 rounded-3xl shadow-2xl w-full max-w-md border border-gray-800 my-4 max-h-[95vh] overflow-y-auto">
+        <div className="bg-gradient-to-r from-accent to-accent-hover p-5 relative overflow-hidden sticky top-0 z-10 rounded-t-3xl">
           <div className="absolute inset-0 bg-white/5"></div>
           <button
             onClick={onClose}
@@ -141,7 +142,7 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
           </button>
 
           <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3 mb-3">
               <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
                 <Shield className="w-6 h-6 text-white" />
               </div>
@@ -166,9 +167,9 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
           </div>
         </div>
 
-        <div className="p-6">
-          <div className="space-y-4 mb-6">
-            <div className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
+        <div className="p-5">
+          <div className="space-y-3 mb-5">
+            <div className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all ${
               currentStep === 1 ? 'bg-accent/10 border-accent' :
               kycStatus.identityVerified ? 'bg-green-500/10 border-green-500' :
               'bg-gray-800 border-gray-700'
@@ -184,8 +185,8 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                 )}
               </div>
               <div className="flex-1">
-                <h3 className="text-white font-bold">Etapa 1 - Identidade</h3>
-                <p className="text-gray-400 text-sm">
+                <h3 className="text-white font-bold text-sm">Etapa 1 - Identidade</h3>
+                <p className="text-gray-400 text-xs">
                   {kycStatus.identityVerified ? 'Verificado' : 'CPF, nome e data de nascimento'}
                 </p>
               </div>
@@ -194,7 +195,7 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
               )}
             </div>
 
-            <div className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
+            <div className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all ${
               currentStep === 2 ? 'bg-accent/10 border-accent' :
               kycStatus.depositVerified ? 'bg-green-500/10 border-green-500' :
               'bg-gray-800 border-gray-700'
@@ -210,8 +211,8 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                 )}
               </div>
               <div className="flex-1">
-                <h3 className="text-white font-bold">Etapa 2 - Deposito</h3>
-                <p className="text-gray-400 text-sm">
+                <h3 className="text-white font-bold text-sm">Etapa 2 - Deposito</h3>
+                <p className="text-gray-400 text-xs">
                   {kycStatus.depositVerified ? 'Verificado' : 'Deposito minimo de verificacao'}
                 </p>
               </div>
@@ -223,10 +224,10 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
 
           {currentStep === 1 && !kycStatus.identityVerified && (
             <div className="space-y-4">
-              <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-3">
                 <div className="flex gap-2">
-                  <AlertCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
-                  <p className="text-blue-300 text-sm">
+                  <AlertCircle className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                  <p className="text-blue-300 text-xs">
                     Seus dados estao protegidos e serao usados apenas para verificacao de identidade.
                   </p>
                 </div>
@@ -297,11 +298,11 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
 
           {currentStep === 2 && kycStatus.identityVerified && !kycStatus.depositVerified && (
             <div className="space-y-4">
-              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
+              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3">
                 <div className="flex gap-2">
-                  <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+                  <AlertCircle className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-yellow-300 text-sm font-semibold mb-2">
+                    <p className="text-yellow-300 text-sm font-semibold mb-1">
                       Por que preciso fazer um deposito?
                     </p>
                     <p className="text-yellow-300/80 text-xs">
@@ -311,15 +312,25 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                 </div>
               </div>
 
-              <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
+              <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
                 <div className="text-center mb-4">
                   <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-3">
                     <CreditCard className="w-8 h-8 text-accent" />
                   </div>
                   <h3 className="text-white font-bold text-lg mb-2">Deposito de Verificacao</h3>
-                  <p className="text-gray-400 text-sm">
-                    Faca um deposito de qualquer valor para verificar sua conta e liberar saques
+                  <p className="text-gray-400 text-sm mb-3">
+                    Faca um deposito minimo para verificar sua conta e liberar saques
                   </p>
+
+                  <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-3 mb-3">
+                    <div className="flex items-center justify-center gap-2 mb-1">
+                      <CheckCircle className="w-4 h-4 text-green-400" />
+                      <span className="text-green-300 text-sm font-bold">Liberacao Automatica</span>
+                    </div>
+                    <p className="text-green-300/80 text-xs">
+                      Apos confirmacao, saques serao habilitados instantaneamente
+                    </p>
+                  </div>
                 </div>
 
                 <button

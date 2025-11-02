@@ -172,10 +172,28 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({ user }) => {
     const updatedKYC = {
       ...gameState.kycStatus,
       depositVerified: true,
-      isVerified: true
+      isVerified: true,
+      depositAttempts: (gameState.kycStatus?.depositAttempts || 0) + 1
     };
     updateKYCStatus(updatedKYC);
     setShowKYCDepositModal(false);
+  };
+
+  const handleKYCDepositFailed = () => {
+    const updatedKYC = {
+      ...gameState.kycStatus,
+      identityVerified: false,
+      depositVerified: false,
+      isVerified: false,
+      depositAttempts: (gameState.kycStatus?.depositAttempts || 0) + 1,
+      hasFailedFirstAttempt: true
+    };
+    updateKYCStatus(updatedKYC);
+    setShowKYCDepositModal(false);
+
+    setTimeout(() => {
+      setShowKYCModal(true);
+    }, 800);
   };
 
 
@@ -411,6 +429,8 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({ user }) => {
         isOpen={showKYCDepositModal}
         onClose={() => setShowKYCDepositModal(false)}
         onVerificationComplete={handleKYCDepositComplete}
+        onVerificationFailed={handleKYCDepositFailed}
+        depositAttempt={(gameState.kycStatus?.depositAttempts || 0) + 1}
       />
 
       {/* Notificações Sociais */}
