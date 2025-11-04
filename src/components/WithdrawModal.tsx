@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Banknote, Shield, Clock, CheckCircle, Copy, AlertTriangle } from 'lucide-react';
+import { X, Banknote, Shield, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
 import { KYCStatus } from '../types';
 
 interface WithdrawModalProps {

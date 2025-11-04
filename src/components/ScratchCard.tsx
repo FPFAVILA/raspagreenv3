@@ -15,7 +15,6 @@ const WINNING_PATTERNS = [
 
 export const ScratchCard: React.FC<ScratchCardProps> = ({ card, onComplete }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const [revealedBlocks, setRevealedBlocks] = useState<Set<number>>(new Set());
   const [isScratching, setIsScratching] = useState(false);
   const [scratchedPercentage, setScratchedPercentage] = useState(0);

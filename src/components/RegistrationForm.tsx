@@ -118,7 +118,20 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegister }
     validateField('email', formData.email);
     validateField('password', formData.password);
 
-    if (Object.keys(errors).length > 0) {
+    // Aguardar validacao ser aplicada
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Verificar se ha erros
+    const hasErrors = !formData.name.trim() ||
+                      formData.name.trim().length < 3 ||
+                      !/^[a-zA-ZÀ-ÿ\s]+$/.test(formData.name) ||
+                      !formData.email.trim() ||
+                      !/\S+@\S+\.\S+/.test(formData.email) ||
+                      !formData.password.trim() ||
+                      formData.password.length < 6;
+
+    if (hasErrors) {
+      setIsSubmitting(false);
       return;
     }
 

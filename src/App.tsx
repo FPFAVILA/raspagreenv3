@@ -39,7 +39,6 @@ function App() {
   }, [navigate, location.pathname]);
 
   const handleRegister = (newUser: User) => {
-    // Marcar que o usuário completou o fluxo correto de cadastro
     localStorage.setItem(VALID_REGISTRATION_KEY, 'true');
 
     const initialGameState = {
@@ -53,14 +52,14 @@ function App() {
     try {
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(newUser));
     } catch (error) {
-      console.error('Erro ao salvar usuário:', error);
+      console.error('Erro ao salvar usuario:', error);
     }
 
     setUser(newUser);
 
     setTimeout(() => {
       navigate('/dashboard', { replace: true });
-    }, 1800);
+    }, 2000);
   };
 
   if (isLoading) {
