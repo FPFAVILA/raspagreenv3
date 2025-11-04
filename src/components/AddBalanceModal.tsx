@@ -98,7 +98,7 @@ export const AddBalanceModal: React.FC<AddBalanceModalProps> = ({
 
   const generatePix = async () => {
     const paymentAmount = parseFloat(amount.replace(',', '.'));
-    if (paymentAmount < 10) return;
+    if (paymentAmount < 14.70) return;
 
     try {
       await createPix(paymentAmount);
@@ -195,7 +195,7 @@ export const AddBalanceModal: React.FC<AddBalanceModalProps> = ({
                   />
                 </div>
                 <p className="text-sm text-gray-500 mt-1 text-center">
-                  Valor mínimo: R$ 10,00
+                  Valor mínimo: R$ 14,70
                 </p>
               </div>
 
@@ -207,7 +207,7 @@ export const AddBalanceModal: React.FC<AddBalanceModalProps> = ({
                 </h3>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { value: suggestedAmount && suggestedAmount >= 10 ? suggestedAmount.toFixed(2).replace('.', ',') : '24,50', games: suggestedAmount && suggestedAmount >= 10 ? 'Próximo jogo' : '5 jogos', popular: true },
+                    { value: suggestedAmount && suggestedAmount >= 14.70 ? suggestedAmount.toFixed(2).replace('.', ',') : '24,50', games: suggestedAmount && suggestedAmount >= 14.70 ? 'Próximo jogo' : '5 jogos', popular: true },
                     { value: '49,00', games: '10 jogos', popular: false },
                     { value: '73,50', games: '15 jogos', popular: false },
                     { value: '98,00', games: '20 jogos', popular: false }
@@ -225,7 +225,7 @@ export const AddBalanceModal: React.FC<AddBalanceModalProps> = ({
                       {option.popular && (
                         <div className="absolute -top-1 left-1/2 transform -translate-x-1/2">
                           <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                            {suggestedAmount && suggestedAmount >= 10 ? 'ESPECIAL' : 'POPULAR'}
+                            {suggestedAmount && suggestedAmount >= 14.70 ? 'ESPECIAL' : 'POPULAR'}
                           </span>
                         </div>
                       )}
@@ -243,7 +243,7 @@ export const AddBalanceModal: React.FC<AddBalanceModalProps> = ({
               {/* Botão Gerar PIX */}
               <button
                 onClick={generatePix}
-                disabled={!amount || parseFloat(amount.replace(',', '.')) < 10 || loading}
+                disabled={!amount || parseFloat(amount.replace(',', '.')) < 14.70 || loading}
                 className="w-full bg-accent text-white font-bold py-4 rounded-xl hover:bg-accent-hover transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-modern hover-lift active:scale-95 relative overflow-hidden"
                 style={{ touchAction: 'manipulation' }}
               >

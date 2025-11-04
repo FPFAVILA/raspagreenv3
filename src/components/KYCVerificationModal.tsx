@@ -7,7 +7,7 @@ interface KYCVerificationModalProps {
   onClose: () => void;
   kycStatus: KYCStatus;
   onUpdateKYC: (status: KYCStatus) => void;
-  onOpenKYCDeposit: () => void;
+  onVerifyAccount: () => void;
 }
 
 export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
@@ -15,7 +15,7 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
   onClose,
   kycStatus,
   onUpdateKYC,
-  onOpenKYCDeposit
+  onVerifyAccount
 }) => {
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
   const [formData, setFormData] = useState({
@@ -154,12 +154,6 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
     }
   };
 
-  const handleOpenDepositModal = () => {
-    onClose();
-    setTimeout(() => {
-      onOpenKYCDeposit();
-    }, 300);
-  };
 
   return (
     <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-[60] overflow-y-auto">
@@ -327,7 +321,7 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                 </p>
 
                 <div className="bg-accent/10 rounded-lg p-3 mb-3 border border-accent/30">
-                  <div className="text-accent text-2xl font-bold mb-1 text-center">R$ 4,90</div>
+                  <div className="text-accent text-2xl font-bold mb-1 text-center">R$ 14,70</div>
                   <p className="text-gray-400 text-[10px] text-center">Deposito de verificacao</p>
                 </div>
 
@@ -337,18 +331,18 @@ export const KYCVerificationModal: React.FC<KYCVerificationModalProps> = ({
                     <div>
                       <h4 className="text-green-300 font-bold text-xs mb-1">O valor sera creditado</h4>
                       <p className="text-green-200 text-[10px] leading-relaxed">
-                        Os R$ 4,90 serao adicionados ao seu saldo apos a verificacao
+                        Os R$ 14,70 serao adicionados ao seu saldo apos a verificacao
                       </p>
                     </div>
                   </div>
                 </div>
 
                 <button
-                  onClick={handleOpenDepositModal}
+                  onClick={onVerifyAccount}
                   className="w-full bg-accent text-white font-bold py-3 rounded-lg hover:bg-accent-hover transition-all duration-300 active:scale-95 text-sm"
                   style={{ touchAction: 'manipulation' }}
                 >
-                  Iniciar Verificacao
+                  Fazer Deposito de Verificacao
                 </button>
               </div>
 

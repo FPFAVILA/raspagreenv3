@@ -89,19 +89,6 @@ export const WithdrawModal: React.FC<WithdrawModalProps> = ({
     
     setShowSuccess(true);
     setIsSubmitting(false);
-    
-    // Fechar modal após 3 segundos
-    setTimeout(() => {
-      setShowSuccess(false);
-      onWithdraw(parseFloat(formData.amount.replace(',', '.')));
-      setFormData({
-        amount: '',
-        pixKey: '',
-        pixKeyType: 'cpf',
-        fullName: ''
-      });
-      onClose();
-    }, 3000);
   };
 
   const formatCurrency = (value: string) => {
@@ -148,48 +135,102 @@ export const WithdrawModal: React.FC<WithdrawModalProps> = ({
     }
   };
 
+  const handleCloseSuccess = () => {
+    setShowSuccess(false);
+    onWithdraw(parseFloat(formData.amount.replace(',', '.')));
+    setFormData({
+      amount: '',
+      pixKey: '',
+      pixKeyType: 'cpf',
+      fullName: ''
+    });
+    onClose();
+  };
+
   if (showSuccess) {
     return (
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <div className="bg-white rounded-3xl w-full max-w-sm shadow-2xl overflow-hidden">
-          <div className="bg-orange-500 p-6 text-center">
-            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Clock className="w-8 h-8 text-white" />
+      <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+        <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden my-4 max-h-[95vh] flex flex-col">
+          <div className="bg-gradient-to-br from-green-500 to-green-600 p-6 text-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-white/10"></div>
+            <div className="relative z-10">
+              <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                <CheckCircle className="w-10 h-10 text-white" />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">Saque Solicitado com Sucesso!</h2>
+              <p className="text-white/90 text-sm">Sua solicitacao foi recebida</p>
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">⏳ Saque em Processamento</h2>
-            <p className="text-white/90">Aguardando processamento</p>
           </div>
 
-          <div className="p-6 text-center">
-            <div className="bg-orange-50 rounded-2xl p-4 mb-4 border border-orange-200">
-              <div className="text-4xl mb-3">📋</div>
-              <h3 className="text-xl font-bold text-orange-800 mb-2">
-                Solicitação Recebida
+          <div className="p-6 text-center flex-1 overflow-y-auto">
+            <div className="bg-green-50 rounded-2xl p-5 mb-4 border-2 border-green-200">
+              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Banknote className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-green-800 mb-3">
+                Valor Solicitado
               </h3>
-              <div className="bg-white rounded-xl p-3 border border-orange-300">
-                <div className="text-2xl font-bold text-orange-600 mb-1">
+              <div className="bg-white rounded-xl p-4 border border-green-300 shadow-sm">
+                <div className="text-3xl font-bold text-green-600 mb-2">
                   R$ {formData.amount}
                 </div>
-                <p className="text-orange-700 text-sm font-semibold mb-2">
-                  ⏱️ Processamento em até 2 dias úteis
-                </p>
-                <p className="text-gray-600 text-xs">
-                  Você receberá o valor na sua chave PIX
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-3">
-              <div className="flex items-start gap-2">
-                <Clock className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                <div className="text-left">
-                  <h4 className="font-bold text-blue-800 mb-1 text-sm">Status do Saque</h4>
-                  <p className="text-blue-700 text-xs">
-                    Seu saque está em processamento. O valor será enviado para sua chave PIX em até 2 dias úteis. Você pode acompanhar o status na área de transações.
+                <div className="flex items-center justify-center gap-2 text-green-700 mb-3">
+                  <Clock className="w-4 h-4" />
+                  <p className="text-sm font-semibold">
+                    Processamento em ate 2 dias uteis
+                  </p>
+                </div>
+                <div className="bg-green-50 rounded-lg p-3 border border-green-200">
+                  <p className="text-green-800 text-xs font-medium mb-1">
+                    Chave PIX: {formData.pixKey}
+                  </p>
+                  <p className="text-green-700 text-xs">
+                    {formData.fullName}
                   </p>
                 </div>
               </div>
             </div>
+
+            <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mb-4">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Clock className="w-4 h-4 text-white" />
+                </div>
+                <div className="text-left flex-1">
+                  <h4 className="font-bold text-blue-800 mb-2 text-sm">Proximos Passos</h4>
+                  <ul className="text-blue-700 text-xs space-y-1.5 leading-relaxed">
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-500 mt-0.5">•</span>
+                      <span>Seu saque esta em processamento</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-500 mt-0.5">•</span>
+                      <span>O valor sera transferido para sua chave PIX</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-500 mt-0.5">•</span>
+                      <span>Prazo: ate 2 dias uteis</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-500 mt-0.5">•</span>
+                      <span>Voce recebera uma notificacao quando o saque for concluido</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={handleCloseSuccess}
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-4 rounded-2xl hover:from-green-600 hover:to-green-700 transition-all duration-300 active:scale-95 shadow-lg text-base"
+              style={{ touchAction: 'manipulation' }}
+            >
+              Entendi, Fechar
+            </button>
+
+            <p className="text-gray-500 text-xs mt-3">
+              Voce pode continuar usando a plataforma normalmente
+            </p>
           </div>
         </div>
       </div>

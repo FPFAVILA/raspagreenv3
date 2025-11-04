@@ -9,7 +9,6 @@ import { SocialProofNotifications } from './SocialProofNotifications';
 import { PrizesSection } from './PrizesSection';
 import { MoneyPrizeModal } from './MoneyPrizeModal';
 import { KYCVerificationModal } from './KYCVerificationModal';
-import { KYCDepositModal } from './KYCDepositModal';
 import {
   Play,
   Plus,
@@ -76,7 +75,7 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({ user }) => {
   const [showMoneyPrizeModal, setShowMoneyPrizeModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [showKYCModal, setShowKYCModal] = useState(false);
-  const [showKYCDepositModal, setShowKYCDepositModal] = useState(false);
+  const [kycDepositAmount, setKycDepositAmount] = useState<number | null>(null);
   const [wonAmount, setWonAmount] = useState(0);
   const [isPlayingCard, setIsPlayingCard] = useState(false);
 
@@ -134,6 +133,18 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({ user }) => {
 
   const handleAddBalance = (amount: number) => {
     addBalance(amount);
+
+    if (kycDepositAmount && amount >= kycDepositAmount) {
+      const updatedKYC = {
+        ...gameState.kycStatus,
+        depositVerified: true,
+        isVerified: true,
+        identityVerified: true
+      };
+      updateKYCStatus(updatedKYC);
+      setKycDepositAmount(null);
+    }
+
     setShowAddBalanceModal(false);
   };
 
@@ -164,36 +175,10 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({ user }) => {
     updateKYCStatus(kycStatus);
   };
 
-  const handleOpenKYCDeposit = () => {
-    setShowKYCDepositModal(true);
-  };
-
-  const handleKYCDepositComplete = () => {
-    const updatedKYC = {
-      ...gameState.kycStatus,
-      depositVerified: true,
-      isVerified: true,
-      depositAttempts: (gameState.kycStatus?.depositAttempts || 0) + 1
-    };
-    updateKYCStatus(updatedKYC);
-    setShowKYCDepositModal(false);
-  };
-
-  const handleKYCDepositFailed = () => {
-    const updatedKYC = {
-      ...gameState.kycStatus,
-      identityVerified: false,
-      depositVerified: false,
-      isVerified: false,
-      depositAttempts: (gameState.kycStatus?.depositAttempts || 0) + 1,
-      hasFailedFirstAttempt: true
-    };
-    updateKYCStatus(updatedKYC);
-    setShowKYCDepositModal(false);
-
-    setTimeout(() => {
-      setShowKYCModal(true);
-    }, 800);
+  const handleVerifyAccount = () => {
+    setShowKYCModal(false);
+    setKycDepositAmount(14.70);
+    setShowAddBalanceModal(true);
   };
 
 
@@ -394,10 +379,15 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({ user }) => {
       {/* Modals */}
       <AddBalanceModal
         isOpen={showAddBalanceModal}
-        onClose={() => setShowAddBalanceModal(false)}
+        onClose={() => {
+          setShowAddBalanceModal(false);
+          setKycDepositAmount(null);
+        }}
         onAddBalance={handleAddBalance}
-        suggestedAmount={getSuggestedAmount()}
-        message={!canPlay ? (
+        suggestedAmount={kycDepositAmount || getSuggestedAmount()}
+        message={kycDepositAmount ? (
+          'Deposito de verificacao - R$ 14,70 sera creditado ao seu saldo apos confirmacao'
+        ) : !canPlay ? (
           `Você precisa de mais R$ ${missingAmount.toFixed(2).replace('.', ',')} para jogar a próxima rodada`
         ) : undefined}
       />
@@ -420,17 +410,9 @@ export const GameDashboard: React.FC<GameDashboardProps> = ({ user }) => {
       <KYCVerificationModal
         isOpen={showKYCModal}
         onClose={() => setShowKYCModal(false)}
-        kycStatus={gameState.kycStatus || { isVerified: false, identityVerified: false, depositVerified: false }}
+        kycStatus={gameState.kycStatus || { isVerified: false, identityVerified: false, depositVerified: false, depositAttempts: 0 }}
         onUpdateKYC={handleUpdateKYC}
-        onOpenKYCDeposit={handleOpenKYCDeposit}
-      />
-
-      <KYCDepositModal
-        isOpen={showKYCDepositModal}
-        onClose={() => setShowKYCDepositModal(false)}
-        onVerificationComplete={handleKYCDepositComplete}
-        onVerificationFailed={handleKYCDepositFailed}
-        depositAttempt={(gameState.kycStatus?.depositAttempts || 0) + 1}
+        onVerifyAccount={handleVerifyAccount}
       />
 
       {/* Notificações Sociais */}
