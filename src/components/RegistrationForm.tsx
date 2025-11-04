@@ -179,7 +179,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegister }
             <div className="bg-gray-800/50 rounded-xl p-3 mb-4 border border-gray-700">
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Gift className="w-4 h-4 text-accent animate-bounce" />
-                <span className="text-white font-bold text-sm">BÔNUS EXCLUSIVO</span>
+                <span className="text-white font-bold text-sm">CADASTRE-SE E GANHE</span>
               </div>
               <div className="text-2xl font-bold text-white mb-1">
                 R$ 14,70
