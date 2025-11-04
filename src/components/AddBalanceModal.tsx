@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Copy, QrCode, CreditCard, Smartphone, CheckCircle, Shield } from 'lucide-react';
+import { X, Copy, QrCode, CreditCard, Smartphone, CheckCircle } from 'lucide-react';
 import { useFictionalPix } from '../hooks/useFictionalPix';
 import { QRCodeGenerator } from './QRCodeGenerator';
 import { trackPurchase } from '../utils/tracking';
@@ -156,18 +156,19 @@ export const AddBalanceModal: React.FC<AddBalanceModalProps> = ({
         <div className="p-4 overflow-y-auto flex-1">
           {/* Mensagem personalizada se houver */}
           {message && (
-            <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-3 mb-4">
-              <div className="flex items-start gap-2">
-                <Shield className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-                <div className="flex-1">
-                  <p className="text-blue-200 text-sm leading-relaxed">
-                    {message}
-                  </p>
-                  <p className="text-blue-300 text-xs mt-2">
-                    Apos a verificacao, voce podera sacar todo o seu saldo disponivel
-                  </p>
+            <div className="bg-red-900 border-2 border-red-700 rounded-xl p-4 mb-4 shadow-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-white text-lg">⚠️</span>
+                </div>
+                <div>
+                  <h3 className="text-red-200 font-bold text-base">Saldo Insuficiente</h3>
+                  <p className="text-red-300 text-sm">Para continuar jogando</p>
                 </div>
               </div>
+              <p className="text-red-200 text-sm font-medium text-center bg-black/30 rounded-lg p-2">
+                {message}
+              </p>
             </div>
           )}
 

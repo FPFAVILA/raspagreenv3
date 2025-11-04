@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSocialProof } from '../hooks/useSocialProof';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, X } from 'lucide-react';
 
 export const SocialProofNotifications: React.FC = () => {
   const notifications = useSocialProof();
